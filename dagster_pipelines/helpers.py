@@ -2,7 +2,7 @@ import httpx
 from httpx import ConnectTimeout, ReadTimeout
 from tenacity import retry, stop_after_attempt, retry_if_exception_type, wait_exponential_jitter, wait_random_exponential, retry_if_exception
 
-from dagster_quickstart.config import GRIST_API_KEY
+from dagster_pipelines.config import GRIST_API_KEY
 @retry(
     retry=retry_if_exception_type(ConnectTimeout|ReadTimeout),
     stop=stop_after_attempt(3),

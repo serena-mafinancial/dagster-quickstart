@@ -69,7 +69,7 @@ You can specify new Python dependencies in `setup.py`.
 
 ### Unit testing
 
-Tests are in the `dagster_quickstart_tests` directory and you can run tests using `pytest`.
+Tests are in the `dagster_pipelines_tests` directory and you can run tests using `pytest`.
 
 ## Deploy on Dagster Cloud
 

@@ -1,13 +1,13 @@
 import os
 import unittest
 
-from dagster_quickstart.assets import HNStoriesConfig, hackernews_top_story_ids, hackernews_top_stories
+from dagster_pipelines.assets import HNStoriesConfig, hackernews_top_story_ids, hackernews_top_stories
 from unittest import mock
 
 
 CONFIG = HNStoriesConfig(
-    hn_top_story_ids_path="dagster_quickstart_tests/hackernews_top_story_ids.json",
-    hn_top_stories_path="dagster_quickstart_tests/hackernews_top_stories.csv",
+    hn_top_story_ids_path="dagster_pipelines_tests/hackernews_top_story_ids.json",
+    hn_top_stories_path="dagster_pipelines_tests/hackernews_top_stories.csv",
 )
 
 
@@ -36,7 +36,7 @@ def test_hackernews_top_stories(mock_get):
 
     materialized_results = hackernews_top_stories(CONFIG)
     assert materialized_results.metadata.get("num_records") == 10
-    os.remove("dagster_quickstart_tests/hackernews_top_stories.csv")
+    os.remove("dagster_pipelines_tests/hackernews_top_stories.csv")
 
 
 if __name__ == "__main__":

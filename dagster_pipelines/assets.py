@@ -20,7 +20,7 @@ from dagster import (
     DagsterInstance,
 )
 
-from dagster_quickstart.helpers import get_grist_api_response
+from dagster_pipelines.helpers import get_grist_api_response
 
 
 class HNStoriesConfig(Config):

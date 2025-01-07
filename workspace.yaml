@@ -1,0 +1,8 @@
+load_from:
+  - python_package:
+      package_name: dagster_pipelines
+      location_name: dagster_pipelines
+      attribute: defs
+      working_directory: /app
+      executable_path: /usr/local/bin/python
+      image: ${DAGSTER_CURRENT_IMAGE}

@@ -1,0 +1,91 @@
+{
+  "family": "dagster-user-code-${ENV}",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "${CPU}",
+  "memory": "${MEMORY}",
+  "executionRoleArn": "arn:aws:iam::${AWS_ACCOUNT_ID}:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::${AWS_ACCOUNT_ID}:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+      {
+          "name": "dagster-user-code-${ENV}",
+          "image": "${ECR_REPOSITORY_URL}:${ENV}-latest",
+          "essential": true,
+          "command": ["dagster", "api", "grpc", "-h", "0.0.0.0", "-p", "4000"],
+          "environment": [
+              {
+                  "name": "DAGSTER_HOME",
+                  "value": "/opt/dagster/dagster_home"
+              },
+              {
+                  "name": "ENV",
+                  "value": "${ENV}"
+              },
+              {
+                  "name": "SNOWFLAKE_ACCOUNT",
+                  "value": "${SNOWFLAKE_ACCOUNT}"
+              },
+              {
+                  "name": "SNOWFLAKE_USER",
+                  "value": "${SNOWFLAKE_USER}"
+              },
+              {
+                  "name": "SNOWFLAKE_WAREHOUSE",
+                  "value": "${SNOWFLAKE_WAREHOUSE}"
+              },
+              {
+                  "name": "SNOWFLAKE_DATABASE",
+                  "value": "${SNOWFLAKE_DATABASE}"
+              },
+              {
+                  "name": "SNOWFLAKE_SCHEMA",
+                  "value": "${SNOWFLAKE_SCHEMA}"
+              },
+              {
+                  "name": "DAGSTER_POSTGRES_DB",
+                  "value": "dagster_${ENV}"
+              },
+              {
+                "name": "DAGSTER_CURRENT_IMAGE",
+                "value": "${ECR_REPOSITORY_URL}:${ENV}-latest"
+              }
+          ],
+          "secrets": [
+              {
+                  "name": "SNOWFLAKE_PASSWORD",
+                  "valueFrom": "arn:aws:ssm:${AWS_REGION}:${AWS_ACCOUNT_ID}:parameter/${ENV}/snowflake/password"
+              },
+              {
+                  "name": "GRIST_API_KEY",
+                  "valueFrom": "arn:aws:ssm:${AWS_REGION}:${AWS_ACCOUNT_ID}:parameter/${ENV}/grist/api_key"
+              },
+              {
+                  "name": "DAGSTER_POSTGRES_HOSTNAME",
+                  "valueFrom": "arn:aws:ssm:${AWS_REGION}:${AWS_ACCOUNT_ID}:parameter/${ENV}/postgres/hostname"
+              },
+              {
+                  "name": "DAGSTER_POSTGRES_USER",
+                  "valueFrom": "arn:aws:ssm:${AWS_REGION}:${AWS_ACCOUNT_ID}:parameter/${ENV}/postgres/username"
+              },
+              {
+                  "name": "DAGSTER_POSTGRES_PASSWORD",
+                  "valueFrom": "arn:aws:ssm:${AWS_REGION}:${AWS_ACCOUNT_ID}:parameter/${ENV}/postgres/password"
+              }
+          ],
+          "portMappings": [
+              {
+                  "containerPort": 4000,
+                  "protocol": "tcp"
+              }
+          ],
+          "logConfiguration": {
+              "logDriver": "awslogs",
+              "options": {
+                  "awslogs-group": "/ecs/dagster-${ENV}/user-code",
+                  "awslogs-region": "${AWS_REGION}",
+                  "awslogs-stream-prefix": "ecs"
+              }
+          }
+      }
+  ]
+}
